@@ -34984,9 +34984,6 @@ function CompressedTextureLoader( manager ) {
 
 	Loader.call( this, manager );
 
-	// override in sub classes
-	this._parser = null;
-
 }
 
 CompressedTextureLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
@@ -35010,7 +35007,7 @@ CompressedTextureLoader.prototype = Object.assign( Object.create( Loader.prototy
 
 			loader.load( url[ i ], function ( buffer ) {
 
-				var texDatas = scope._parser( buffer, true );
+				var texDatas = scope.parse( buffer, true );
 
 				images[ i ] = {
 					width: texDatas.width,
@@ -35053,7 +35050,7 @@ CompressedTextureLoader.prototype = Object.assign( Object.create( Loader.prototy
 
 			loader.load( url, function ( buffer ) {
 
-				var texDatas = scope._parser( buffer, true );
+				var texDatas = scope.parse( buffer, true );
 
 				if ( texDatas.isCubemap ) {
 
