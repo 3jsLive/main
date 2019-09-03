@@ -8873,15 +8873,7 @@
 
 			}
 
-			var count = array !== undefined ? array.length / this.itemSize : 0;
-
-			if ( count !== this.count ) {
-
-				console.warn( 'THREE.BufferAttribute: Changing the size of an attribute with .setArray() has been deprecated. Replace with a new buffer instead.' );
-
-			}
-
-			this.count = count;
+			this.count = array !== undefined ? array.length / this.itemSize : 0;
 			this.array = array;
 
 			return this;
@@ -25573,15 +25565,7 @@
 
 			}
 
-			var count = array !== undefined ? array.length / this.stride : 0;
-
-			if ( count !== this.count ) {
-
-				console.warn( 'THREE.InterleavedBuffer: Changing the size of an attribute with .setArray() has been deprecated. Replace with a new buffer instead.' );
-
-			}
-
-			this.count = count;
+			this.count = array !== undefined ? array.length / this.stride : 0;
 			this.array = array;
 
 			return this;
@@ -35000,14 +34984,13 @@
 	 * @author mrdoob / http://mrdoob.com/
 	 *
 	 * Abstract Base class to block based textures loader (dds, pvr, ...)
+	 *
+	 * Sub classes have to implement the parse() method which will be used in load().
 	 */
 
 	function CompressedTextureLoader( manager ) {
 
 		Loader.call( this, manager );
-
-		// override in sub classes
-		this._parser = null;
 
 	}
 
@@ -35032,7 +35015,7 @@
 
 				loader.load( url[ i ], function ( buffer ) {
 
-					var texDatas = scope._parser( buffer, true );
+					var texDatas = scope.parse( buffer, true );
 
 					images[ i ] = {
 						width: texDatas.width,
@@ -35075,7 +35058,7 @@
 
 				loader.load( url, function ( buffer ) {
 
-					var texDatas = scope._parser( buffer, true );
+					var texDatas = scope.parse( buffer, true );
 
 					if ( texDatas.isCubemap ) {
 
@@ -35129,14 +35112,13 @@
 	 * @author Nikos M. / https://github.com/foo123/
 	 *
 	 * Abstract Base class to load generic binary textures formats (rgbe, hdr, ...)
+	 *
+	 * Sub classes have to implement the parse() method which will be used in load().
 	 */
 
 	function DataTextureLoader( manager ) {
 
 		Loader.call( this, manager );
-
-		// override in sub classes
-		this._parser = null;
 
 	}
 
@@ -35155,7 +35137,7 @@
 			loader.setPath( this.path );
 			loader.load( url, function ( buffer ) {
 
-				var texData = scope._parser( buffer );
+				var texData = scope.parse( buffer );
 
 				if ( ! texData ) return;
 
