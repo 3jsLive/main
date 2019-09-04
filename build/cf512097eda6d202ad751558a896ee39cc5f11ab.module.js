@@ -1621,8 +1621,7 @@ Object.assign( Quaternion.prototype, {
  * @author WestLangley / http://github.com/WestLangley
  */
 
-var _vector = new Vector3();
-var _quaternion = new Quaternion();
+var _vector, _quaternion;
 
 function Vector3( x, y, z ) {
 
@@ -1847,6 +1846,8 @@ Object.assign( Vector3.prototype, {
 
 	applyEuler: function ( euler ) {
 
+		if ( _quaternion === undefined ) _quaternion = new Quaternion();
+
 		if ( ! ( euler && euler.isEuler ) ) {
 
 			console.error( 'THREE.Vector3: .applyEuler() now expects an Euler rotation rather than a Vector3 and order.' );
@@ -1858,6 +1859,8 @@ Object.assign( Vector3.prototype, {
 	},
 
 	applyAxisAngle: function ( axis, angle ) {
+
+		if ( _quaternion === undefined ) _quaternion = new Quaternion();
 
 		return this.applyQuaternion( _quaternion.setFromAxisAngle( axis, angle ) );
 
@@ -2147,6 +2150,8 @@ Object.assign( Vector3.prototype, {
 
 	projectOnPlane: function ( planeNormal ) {
 
+		if ( _vector === undefined ) _vector = new Vector3();
+
 		_vector.copy( this ).projectOnVector( planeNormal );
 
 		return this.sub( _vector );
@@ -2154,6 +2159,8 @@ Object.assign( Vector3.prototype, {
 	},
 
 	reflect: function ( normal ) {
+
+		if ( _vector === undefined ) _vector = new Vector3();
 
 		// reflect incident vector off plane orthogonal to normal
 		// normal is assumed to have unit length
@@ -2314,7 +2321,7 @@ Object.assign( Vector3.prototype, {
  * @author tschw
  */
 
-var _vector$1 = new Vector3();
+var _vector$1;
 
 function Matrix3() {
 
@@ -2400,6 +2407,8 @@ Object.assign( Matrix3.prototype, {
 	},
 
 	applyToBufferAttribute: function ( attribute ) {
+
+		if ( _vector$1 === undefined ) _vector$1 = new Vector3();
 
 		for ( var i = 0, l = attribute.count; i < l; i ++ ) {
 
@@ -3836,14 +3845,6 @@ WebGLMultisampleRenderTarget.prototype = Object.assign( Object.create( WebGLRend
 
 } );
 
-var _v1 = new Vector3();
-var _m1 = new Matrix4();
-var _zero = new Vector3( 0, 0, 0 );
-var _one = new Vector3( 1, 1, 1 );
-var _x = new Vector3();
-var _y = new Vector3();
-var _z = new Vector3();
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author supereggbert / http://www.paulbrunt.co.uk/
@@ -3856,6 +3857,10 @@ var _z = new Vector3();
  * @author bhouston / http://clara.io
  * @author WestLangley / http://github.com/WestLangley
  */
+
+var _v1, _m1;
+var _zero, _one;
+var _x, _y, _z;
 
 function Matrix4() {
 
@@ -3964,6 +3969,8 @@ Object.assign( Matrix4.prototype, {
 	},
 
 	extractRotation: function ( m ) {
+
+		if ( _v1 === undefined ) _v1 = new Vector3();
 
 		// this method does not support reflection matrices
 
@@ -4128,11 +4135,26 @@ Object.assign( Matrix4.prototype, {
 
 	makeRotationFromQuaternion: function ( q ) {
 
+		if ( _zero === undefined ) {
+
+			_zero = new Vector3( 0, 0, 0 );
+			_one = new Vector3( 1, 1, 1 );
+
+		}
+
 		return this.compose( _zero, q, _one );
 
 	},
 
 	lookAt: function ( eye, target, up ) {
+
+		if ( _x === undefined ) {
+
+			_x = new Vector3();
+			_y = new Vector3();
+			_z = new Vector3();
+
+		}
 
 		var te = this.elements;
 
@@ -4252,6 +4274,8 @@ Object.assign( Matrix4.prototype, {
 	},
 
 	applyToBufferAttribute: function ( attribute ) {
+
+		if ( _v1 === undefined ) _v1 = new Vector3();
 
 		for ( var i = 0, l = attribute.count; i < l; i ++ ) {
 
@@ -4603,6 +4627,13 @@ Object.assign( Matrix4.prototype, {
 
 	decompose: function ( position, quaternion, scale ) {
 
+		if ( _m1 === undefined ) {
+
+			_m1 = new Matrix4();
+			_v1 = new Vector3();
+
+		}
+
 		var te = this.elements;
 
 		var sx = _v1.set( te[ 0 ], te[ 1 ], te[ 2 ] ).length();
@@ -4760,8 +4791,7 @@ Object.assign( Matrix4.prototype, {
  * @author bhouston / http://clara.io
  */
 
-var _matrix = new Matrix4();
-var _quaternion$1 = new Quaternion();
+var _matrix, _quaternion$1;
 
 function Euler( x, y, z, order ) {
 
@@ -5009,6 +5039,8 @@ Object.assign( Euler.prototype, {
 
 	setFromQuaternion: function ( q, order, update ) {
 
+		if ( _matrix === undefined ) _matrix = new Matrix4();
+
 		_matrix.makeRotationFromQuaternion( q );
 
 		return this.setFromRotationMatrix( _matrix, order, update );
@@ -5024,6 +5056,8 @@ Object.assign( Euler.prototype, {
 	reorder: function ( newOrder ) {
 
 		// WARNING: this discards revolution information -bhouston
+
+		if ( _quaternion$1 === undefined ) _quaternion$1 = new Quaternion();
 
 		_quaternion$1.setFromEuler( this );
 
@@ -5134,24 +5168,6 @@ Object.assign( Layers.prototype, {
 
 } );
 
-var _object3DId = 0;
-
-var _v1$1 = new Vector3();
-var _q1 = new Quaternion();
-var _m1$1 = new Matrix4();
-var _target = new Vector3();
-
-var _position = new Vector3();
-var _scale = new Vector3();
-var _quaternion$2 = new Quaternion();
-
-var _xAxis = new Vector3( 1, 0, 0 );
-var _yAxis = new Vector3( 0, 1, 0 );
-var _zAxis = new Vector3( 0, 0, 1 );
-
-var _addedEvent = { type: 'added' };
-var _removedEvent = { type: 'removed' };
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author mikael emtinger / http://gomo.se/
@@ -5159,6 +5175,13 @@ var _removedEvent = { type: 'removed' };
  * @author WestLangley / http://github.com/WestLangley
  * @author elephantatwork / www.elephantatwork.ch
  */
+
+var _object3DId = 0;
+var _m1$1, _q1, _v1$1;
+var _xAxis, _yAxis, _zAxis;
+var _target, _position, _scale, _quaternion$2;
+var _addedEvent = { type: 'added' };
+var _removedEvent = { type: 'removed' };
 
 function Object3D() {
 
@@ -5307,6 +5330,8 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		// rotate object on axis in object space
 		// axis is assumed to be normalized
 
+		if ( _q1 === undefined ) _q1 = new Quaternion();
+
 		_q1.setFromAxisAngle( axis, angle );
 
 		this.quaternion.multiply( _q1 );
@@ -5321,6 +5346,8 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		// axis is assumed to be normalized
 		// method assumes no rotated parent
 
+		if ( _q1 === undefined ) _q1 = new Quaternion();
+
 		_q1.setFromAxisAngle( axis, angle );
 
 		this.quaternion.premultiply( _q1 );
@@ -5331,17 +5358,23 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 	rotateX: function ( angle ) {
 
+		if ( _xAxis === undefined ) _xAxis = new Vector3( 1, 0, 0 );
+
 		return this.rotateOnAxis( _xAxis, angle );
 
 	},
 
 	rotateY: function ( angle ) {
 
+		if ( _yAxis === undefined ) _yAxis = new Vector3( 0, 1, 0 );
+
 		return this.rotateOnAxis( _yAxis, angle );
 
 	},
 
 	rotateZ: function ( angle ) {
+
+		if ( _zAxis === undefined ) _zAxis = new Vector3( 0, 0, 1 );
 
 		return this.rotateOnAxis( _zAxis, angle );
 
@@ -5351,6 +5384,8 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		// translate object by distance along axis in object space
 		// axis is assumed to be normalized
+
+		if ( _v1$1 === undefined ) _v1$1 = new Vector3();
 
 		_v1$1.copy( axis ).applyQuaternion( this.quaternion );
 
@@ -5362,17 +5397,23 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 	translateX: function ( distance ) {
 
+		if ( _xAxis === undefined ) _xAxis = new Vector3( 1, 0, 0 );
+
 		return this.translateOnAxis( _xAxis, distance );
 
 	},
 
 	translateY: function ( distance ) {
 
+		if ( _yAxis === undefined ) _yAxis = new Vector3( 0, 1, 0 );
+
 		return this.translateOnAxis( _yAxis, distance );
 
 	},
 
 	translateZ: function ( distance ) {
+
+		if ( _zAxis === undefined ) _zAxis = new Vector3( 0, 0, 1 );
 
 		return this.translateOnAxis( _zAxis, distance );
 
@@ -5386,6 +5427,8 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 	worldToLocal: function ( vector ) {
 
+		if ( _m1$1 === undefined ) _m1$1 = new Matrix4();
+
 		return vector.applyMatrix4( _m1$1.getInverse( this.matrixWorld ) );
 
 	},
@@ -5393,6 +5436,15 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 	lookAt: function ( x, y, z ) {
 
 		// This method does not support objects having non-uniformly-scaled parent(s)
+
+		if ( _position === undefined ) {
+
+			_q1 = new Quaternion();
+			_m1$1 = new Matrix4();
+			_target = new Vector3();
+			_position = new Vector3();
+
+		}
 
 		if ( x.isVector3 ) {
 
@@ -5509,6 +5561,8 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		// adds object as a child of this, while maintaining the object's world transform
 
+		if ( _m1$1 === undefined ) _m1$1 = new Matrix4();
+
 		this.updateWorldMatrix( true, false );
 
 		_m1$1.getInverse( this.matrixWorld );
@@ -5581,6 +5635,13 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 	getWorldQuaternion: function ( target ) {
 
+		if ( _scale === undefined ) {
+
+			_position = new Vector3();
+			_scale = new Vector3();
+
+		}
+
 		if ( target === undefined ) {
 
 			console.warn( 'THREE.Object3D: .getWorldQuaternion() target is now required' );
@@ -5597,6 +5658,13 @@ Object3D.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 	},
 
 	getWorldScale: function ( target ) {
+
+		if ( _quaternion$2 === undefined ) {
+
+			_position = new Vector3();
+			_quaternion$2 = new Quaternion();
+
+		}
 
 		if ( target === undefined ) {
 
@@ -6044,39 +6112,19 @@ Scene.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 } );
 
-var _points = [
-	new Vector3(),
-	new Vector3(),
-	new Vector3(),
-	new Vector3(),
-	new Vector3(),
-	new Vector3(),
-	new Vector3(),
-	new Vector3()
-];
-var _vector$2 = new Vector3();
-
-// triangle centered vertices
-
-var _v0 = new Vector3();
-var _v1$2 = new Vector3();
-var _v2 = new Vector3();
-
-// triangle edge vectors
-
-var _f0 = new Vector3();
-var _f1 = new Vector3();
-var _f2 = new Vector3();
-
-var _center = new Vector3();
-var _extents = new Vector3();
-var _triangleNormal = new Vector3();
-var _testAxis = new Vector3();
-
 /**
  * @author bhouston / http://clara.io
  * @author WestLangley / http://github.com/WestLangley
  */
+
+var _points;
+var _vector$2;
+
+var _v0, _v1$2, _v2;
+var _f0, _f1, _f2;
+var _center;
+var _extents;
+var _triangleNormal;
 
 function Box3( min, max ) {
 
@@ -6179,6 +6227,8 @@ Object.assign( Box3.prototype, {
 	},
 
 	setFromCenterAndSize: function ( center, size ) {
+
+		if ( _vector$2 === undefined ) _vector$2 = new Vector3();
 
 		var halfSize = _vector$2.copy( size ).multiplyScalar( 0.5 );
 
@@ -6283,6 +6333,8 @@ Object.assign( Box3.prototype, {
 	},
 
 	expandByObject: function ( object ) {
+
+		if ( _vector$2 === undefined ) _vector$2 = new Vector3();
 
 		var i, l;
 
@@ -6389,6 +6441,8 @@ Object.assign( Box3.prototype, {
 
 	intersectsSphere: function ( sphere ) {
 
+		if ( _vector$2 === undefined ) _vector$2 = new Vector3();
+
 		// Find the point on the AABB closest to the sphere center.
 		this.clampPoint( sphere.center, _vector$2 );
 
@@ -6445,6 +6499,26 @@ Object.assign( Box3.prototype, {
 	},
 
 	intersectsTriangle: function ( triangle ) {
+
+		if ( _v0 === undefined ) {
+
+			// triangle centered vertices
+
+			_v0 = new Vector3();
+			_v1$2 = new Vector3();
+			_v2 = new Vector3();
+
+			// triangle edge vectors
+
+			_f0 = new Vector3();
+			_f1 = new Vector3();
+			_f2 = new Vector3();
+
+			_center = new Vector3();
+			_extents = new Vector3();
+			_triangleNormal = new Vector3();
+
+		}
 
 		if ( this.isEmpty() ) {
 
@@ -6512,6 +6586,8 @@ Object.assign( Box3.prototype, {
 
 	distanceToPoint: function ( point ) {
 
+		if ( _vector$2 === undefined ) _vector$2 = new Vector3();
+
 		var clampedPoint = _vector$2.copy( point ).clamp( this.min, this.max );
 
 		return clampedPoint.sub( point ).length();
@@ -6519,6 +6595,8 @@ Object.assign( Box3.prototype, {
 	},
 
 	getBoundingSphere: function ( target ) {
+
+		if ( _vector$2 === undefined ) _vector$2 = new Vector3();
 
 		if ( target === undefined ) {
 
@@ -6558,6 +6636,21 @@ Object.assign( Box3.prototype, {
 
 	applyMatrix4: function ( matrix ) {
 
+		if ( _points === undefined ) {
+
+			_points = [
+				new Vector3(),
+				new Vector3(),
+				new Vector3(),
+				new Vector3(),
+				new Vector3(),
+				new Vector3(),
+				new Vector3(),
+				new Vector3()
+			];
+
+		}
+
 		// transform of empty box is an empty box.
 		if ( this.isEmpty() ) return this;
 
@@ -6594,7 +6687,11 @@ Object.assign( Box3.prototype, {
 
 } );
 
+var _testAxis;
+
 function satForAxes( axes, v0, v1, v2, extents ) {
+
+	if ( _testAxis === undefined ) _testAxis = new Vector3();
 
 	var i, j;
 
@@ -6622,12 +6719,12 @@ function satForAxes( axes, v0, v1, v2, extents ) {
 
 }
 
-var _box = new Box3();
-
 /**
  * @author bhouston / http://clara.io
  * @author mrdoob / http://mrdoob.com/
  */
+
+var _box;
 
 function Sphere( center, radius ) {
 
@@ -6648,6 +6745,8 @@ Object.assign( Sphere.prototype, {
 	},
 
 	setFromPoints: function ( points, optionalCenter ) {
+
+		if ( _box === undefined ) _box = new Box3();
 
 		var center = this.center;
 
@@ -6793,18 +6892,13 @@ Object.assign( Sphere.prototype, {
 
 } );
 
-var _vector$3 = new Vector3();
-var _segCenter = new Vector3();
-var _segDir = new Vector3();
-var _diff = new Vector3();
-
-var _edge1 = new Vector3();
-var _edge2 = new Vector3();
-var _normal = new Vector3();
-
 /**
  * @author bhouston / http://clara.io
  */
+
+var _vector$3;
+var _segCenter, _segDir, _diff;
+var _diff, _edge1, _edge2, _normal;
 
 function Ray( origin, direction ) {
 
@@ -6862,6 +6956,8 @@ Object.assign( Ray.prototype, {
 
 	recast: function ( t ) {
 
+		if ( _vector$3 === undefined ) _vector$3 = new Vector3();
+
 		this.origin.copy( this.at( t, _vector$3 ) );
 
 		return this;
@@ -6899,6 +6995,8 @@ Object.assign( Ray.prototype, {
 
 	distanceSqToPoint: function ( point ) {
 
+		if ( _vector$3 === undefined ) _vector$3 = new Vector3();
+
 		var directionDistance = _vector$3.subVectors( point, this.origin ).dot( this.direction );
 
 		// point behind the ray
@@ -6916,6 +7014,14 @@ Object.assign( Ray.prototype, {
 	},
 
 	distanceSqToSegment: function ( v0, v1, optionalPointOnRay, optionalPointOnSegment ) {
+
+		if ( _segCenter === undefined ) {
+
+			_segCenter = new Vector3();
+			_segDir = new Vector3();
+			_diff = new Vector3();
+
+		}
 
 		// from http://www.geometrictools.com/GTEngine/Include/Mathematics/GteDistRaySegment.h
 		// It returns the min distance between the ray and the segment
@@ -7035,6 +7141,8 @@ Object.assign( Ray.prototype, {
 	},
 
 	intersectSphere: function ( sphere, target ) {
+
+		if ( _vector$3 === undefined ) _vector$3 = new Vector3();
 
 		_vector$3.subVectors( sphere.center, this.origin );
 		var tca = _vector$3.dot( this.direction );
@@ -7208,6 +7316,8 @@ Object.assign( Ray.prototype, {
 
 	intersectsBox: function ( box ) {
 
+		if ( _vector$3 === undefined ) _vector$3 = new Vector3();
+
 		return this.intersectBox( box, _vector$3 ) !== null;
 
 	},
@@ -7215,6 +7325,15 @@ Object.assign( Ray.prototype, {
 	intersectTriangle: function ( a, b, c, backfaceCulling, target ) {
 
 		// Compute the offset origin, edges, and normal.
+
+		if ( _diff === undefined ) {
+
+			_diff = new Vector3();
+			_edge1 = new Vector3();
+			_edge2 = new Vector3();
+			_normal = new Vector3();
+
+		}
 
 		// from http://www.geometrictools.com/GTEngine/Include/Mathematics/GteIntrRay3Triangle3.h
 
@@ -7309,17 +7428,8 @@ Object.assign( Ray.prototype, {
  * @author mrdoob / http://mrdoob.com/
  */
 
-var _v0$1 = new Vector3();
-var _v1$3 = new Vector3();
-var _v2$1 = new Vector3();
-var _v3 = new Vector3();
-
-var _vab = new Vector3();
-var _vac = new Vector3();
-var _vbc = new Vector3();
-var _vap = new Vector3();
-var _vbp = new Vector3();
-var _vcp = new Vector3();
+var _v0$1, _v1$3, _v2$1, _v3;
+var _vab, _vac, _vbc, _vap, _vbp, _vcp;
 
 function Triangle( a, b, c ) {
 
@@ -7332,6 +7442,8 @@ function Triangle( a, b, c ) {
 Object.assign( Triangle, {
 
 	getNormal: function ( a, b, c, target ) {
+
+		if ( _v0$1 === undefined ) _v0$1 = new Vector3();
 
 		if ( target === undefined ) {
 
@@ -7358,6 +7470,14 @@ Object.assign( Triangle, {
 	// static/instance method to calculate barycentric coordinates
 	// based on: http://www.blackpawn.com/texts/pointinpoly/default.html
 	getBarycoord: function ( point, a, b, c, target ) {
+
+		if ( _v2$1 === undefined ) {
+
+			_v0$1 = new Vector3();
+			_v1$3 = new Vector3();
+			_v2$1 = new Vector3();
+
+		}
 
 		_v0$1.subVectors( c, a );
 		_v1$3.subVectors( b, a );
@@ -7398,6 +7518,8 @@ Object.assign( Triangle, {
 
 	containsPoint: function ( point, a, b, c ) {
 
+		if ( _v3 === undefined ) _v3 = new Vector3();
+
 		Triangle.getBarycoord( point, a, b, c, _v3 );
 
 		return ( _v3.x >= 0 ) && ( _v3.y >= 0 ) && ( ( _v3.x + _v3.y ) <= 1 );
@@ -7405,6 +7527,8 @@ Object.assign( Triangle, {
 	},
 
 	getUV: function ( point, p1, p2, p3, uv1, uv2, uv3, target ) {
+
+		if ( _v3 === undefined ) _v3 = new Vector3();
 
 		this.getBarycoord( point, p1, p2, p3, _v3 );
 
@@ -7418,6 +7542,13 @@ Object.assign( Triangle, {
 	},
 
 	isFrontFacing: function ( a, b, c, direction ) {
+
+		if ( _v1$3 === undefined ) {
+
+			_v0$1 = new Vector3();
+			_v1$3 = new Vector3();
+
+		}
 
 		_v0$1.subVectors( c, b );
 		_v1$3.subVectors( a, b );
@@ -7468,6 +7599,13 @@ Object.assign( Triangle.prototype, {
 	},
 
 	getArea: function () {
+
+		if ( _v1$3 === undefined ) {
+
+			_v0$1 = new Vector3();
+			_v1$3 = new Vector3();
+
+		}
 
 		_v0$1.subVectors( this.c, this.b );
 		_v1$3.subVectors( this.a, this.b );
@@ -7539,6 +7677,17 @@ Object.assign( Triangle.prototype, {
 	},
 
 	closestPointToPoint: function ( p, target ) {
+
+		if ( _vab === undefined ) {
+
+			_vab = new Vector3();
+			_vac = new Vector3();
+			_vbc = new Vector3();
+			_vap = new Vector3();
+			_vbp = new Vector3();
+			_vcp = new Vector3();
+
+		}
 
 		if ( target === undefined ) {
 
@@ -9526,13 +9675,9 @@ function arrayMax( array ) {
  */
 
 var _bufferGeometryId = 1; // BufferGeometry uses odd numbers as Id
-
-var _m1$2 = new Matrix4();
-var _obj = new Object3D();
-var _offset = new Vector3();
-var _box$1 = new Box3();
-var _boxMorphTargets = new Box3();
-var _vector$4 = new Vector3();
+var _m1$2, _obj, _offset;
+var _box$1, _boxMorphTargets;
+var _vector$4;
 
 function BufferGeometry() {
 
@@ -9703,6 +9848,8 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 
 		// rotate geometry around world x-axis
 
+		if ( _m1$2 === undefined ) _m1$2 = new Matrix4();
+
 		_m1$2.makeRotationX( angle );
 
 		this.applyMatrix( _m1$2 );
@@ -9714,6 +9861,8 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 	rotateY: function ( angle ) {
 
 		// rotate geometry around world y-axis
+
+		if ( _m1$2 === undefined ) _m1$2 = new Matrix4();
 
 		_m1$2.makeRotationY( angle );
 
@@ -9727,6 +9876,8 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 
 		// rotate geometry around world z-axis
 
+		if ( _m1$2 === undefined ) _m1$2 = new Matrix4();
+
 		_m1$2.makeRotationZ( angle );
 
 		this.applyMatrix( _m1$2 );
@@ -9738,6 +9889,8 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 	translate: function ( x, y, z ) {
 
 		// translate geometry
+
+		if ( _m1$2 === undefined ) _m1$2 = new Matrix4();
 
 		_m1$2.makeTranslation( x, y, z );
 
@@ -9751,6 +9904,8 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 
 		// scale geometry
 
+		if ( _m1$2 === undefined ) _m1$2 = new Matrix4();
+
 		_m1$2.makeScale( x, y, z );
 
 		this.applyMatrix( _m1$2 );
@@ -9760,6 +9915,8 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 	},
 
 	lookAt: function ( vector ) {
+
+		if ( _obj === undefined ) _obj = new Object3D();
 
 		_obj.lookAt( vector );
 
@@ -9772,6 +9929,8 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 	},
 
 	center: function () {
+
+		if ( _offset === undefined ) _offset = new Vector3();
 
 		this.computeBoundingBox();
 
@@ -10078,6 +10237,12 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 
 	computeBoundingBox: function () {
 
+		if ( _box$1 === undefined ) {
+
+			_box$1 = new Box3();
+
+		}
+
 		if ( this.boundingBox === null ) {
 
 			this.boundingBox = new Box3();
@@ -10122,6 +10287,14 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 	},
 
 	computeBoundingSphere: function () {
+
+		if ( _boxMorphTargets === undefined ) {
+
+			_box$1 = new Box3();
+			_vector$4 = new Vector3();
+			_boxMorphTargets = new Box3();
+
+		}
 
 		if ( this.boundingSphere === null ) {
 
@@ -10362,6 +10535,8 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
 	},
 
 	normalizeNormals: function () {
+
+		if ( _vector$4 === undefined ) _vector$4 = new Vector3();
 
 		var normals = this.attributes.normal;
 
@@ -10730,28 +10905,12 @@ BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototy
  * @author jonobr1 / http://jonobr1.com/
  */
 
-var _inverseMatrix = new Matrix4();
-var _ray = new Ray();
-var _sphere = new Sphere();
-
-var _vA = new Vector3();
-var _vB = new Vector3();
-var _vC = new Vector3();
-
-var _tempA = new Vector3();
-var _tempB = new Vector3();
-var _tempC = new Vector3();
-
-var _morphA = new Vector3();
-var _morphB = new Vector3();
-var _morphC = new Vector3();
-
-var _uvA = new Vector2();
-var _uvB = new Vector2();
-var _uvC = new Vector2();
-
-var _intersectionPoint = new Vector3();
-var _intersectionPointWorld = new Vector3();
+var _inverseMatrix, _ray, _sphere;
+var _vA, _vB, _vC;
+var _tempA, _tempB, _tempC;
+var _morphA, _morphB, _morphC;
+var _uvA, _uvB, _uvC;
+var _intersectionPoint, _intersectionPointWorld;
 
 function Mesh( geometry, material ) {
 
@@ -10849,6 +11008,33 @@ Mesh.prototype = Object.assign( Object.create( Object3D.prototype ), {
 	},
 
 	raycast: function ( raycaster, intersects ) {
+
+		if ( _intersectionPointWorld === undefined ) {
+
+			_inverseMatrix = new Matrix4();
+			_ray = new Ray();
+			_sphere = new Sphere();
+
+			_vA = new Vector3();
+			_vB = new Vector3();
+			_vC = new Vector3();
+
+			_tempA = new Vector3();
+			_tempB = new Vector3();
+			_tempC = new Vector3();
+
+			_morphA = new Vector3();
+			_morphB = new Vector3();
+			_morphC = new Vector3();
+
+			_uvA = new Vector2();
+			_uvB = new Vector2();
+			_uvC = new Vector2();
+
+			_intersectionPoint = new Vector3();
+			_intersectionPointWorld = new Vector3();
+
+		}
 
 		var geometry = this.geometry;
 		var material = this.material;
@@ -11183,9 +11369,7 @@ function checkBufferGeometryIntersection( object, material, raycaster, ray, posi
  */
 
 var _geometryId = 0; // Geometry uses even numbers as Id
-var _m1$3 = new Matrix4();
-var _obj$1 = new Object3D();
-var _offset$1 = new Vector3();
+var _m1$3, _obj$1, _offset$1;
 
 function Geometry() {
 
@@ -11277,6 +11461,8 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		// rotate geometry around world x-axis
 
+		if ( _m1$3 === undefined ) _m1$3 = new Matrix4();
+
 		_m1$3.makeRotationX( angle );
 
 		this.applyMatrix( _m1$3 );
@@ -11288,6 +11474,8 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 	rotateY: function ( angle ) {
 
 		// rotate geometry around world y-axis
+
+		if ( _m1$3 === undefined ) _m1$3 = new Matrix4();
 
 		_m1$3.makeRotationY( angle );
 
@@ -11301,6 +11489,8 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		// rotate geometry around world z-axis
 
+		if ( _m1$3 === undefined ) _m1$3 = new Matrix4();
+
 		_m1$3.makeRotationZ( angle );
 
 		this.applyMatrix( _m1$3 );
@@ -11312,6 +11502,8 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 	translate: function ( x, y, z ) {
 
 		// translate geometry
+
+		if ( _m1$3 === undefined ) _m1$3 = new Matrix4();
 
 		_m1$3.makeTranslation( x, y, z );
 
@@ -11325,6 +11517,8 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 		// scale geometry
 
+		if ( _m1$3 === undefined ) _m1$3 = new Matrix4();
+
 		_m1$3.makeScale( x, y, z );
 
 		this.applyMatrix( _m1$3 );
@@ -11334,6 +11528,8 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 	},
 
 	lookAt: function ( vector ) {
+
+		if ( _obj$1 === undefined ) _obj$1 = new Object3D();
 
 		_obj$1.lookAt( vector );
 
@@ -11479,6 +11675,8 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 	},
 
 	center: function () {
+
+		if ( _offset$1 === undefined ) _offset$1 = new Vector3();
 
 		this.computeBoundingBox();
 
@@ -12564,196 +12762,194 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 
 // BoxGeometry
 
-class BoxGeometry extends Geometry {
+function BoxGeometry( width, height, depth, widthSegments, heightSegments, depthSegments ) {
 
-	constructor( width, height, depth, widthSegments, heightSegments, depthSegments ) {
+	Geometry.call( this );
 
-		super();
+	this.type = 'BoxGeometry';
 
-		this.type = 'BoxGeometry';
+	this.parameters = {
+		width: width,
+		height: height,
+		depth: depth,
+		widthSegments: widthSegments,
+		heightSegments: heightSegments,
+		depthSegments: depthSegments
+	};
 
-		this.parameters = {
-			width: width,
-			height: height,
-			depth: depth,
-			widthSegments: widthSegments,
-			heightSegments: heightSegments,
-			depthSegments: depthSegments
-		};
-
-		this.fromBufferGeometry( new BoxBufferGeometry( width, height, depth, widthSegments, heightSegments, depthSegments ) );
-		this.mergeVertices();
-
-	}
+	this.fromBufferGeometry( new BoxBufferGeometry( width, height, depth, widthSegments, heightSegments, depthSegments ) );
+	this.mergeVertices();
 
 }
+
+BoxGeometry.prototype = Object.create( Geometry.prototype );
+BoxGeometry.prototype.constructor = BoxGeometry;
 
 // BoxBufferGeometry
 
-class BoxBufferGeometry extends BufferGeometry {
+function BoxBufferGeometry( width, height, depth, widthSegments, heightSegments, depthSegments ) {
 
-	constructor( width, height, depth, widthSegments, heightSegments, depthSegments ) {
+	BufferGeometry.call( this );
 
-		super();
+	this.type = 'BoxBufferGeometry';
 
-		this.type = 'BoxBufferGeometry';
+	this.parameters = {
+		width: width,
+		height: height,
+		depth: depth,
+		widthSegments: widthSegments,
+		heightSegments: heightSegments,
+		depthSegments: depthSegments
+	};
 
-		this.parameters = {
-			width: width,
-			height: height,
-			depth: depth,
-			widthSegments: widthSegments,
-			heightSegments: heightSegments,
-			depthSegments: depthSegments
-		};
+	var scope = this;
 
-		var scope = this;
+	width = width || 1;
+	height = height || 1;
+	depth = depth || 1;
 
-		width = width || 1;
-		height = height || 1;
-		depth = depth || 1;
+	// segments
 
-		// segments
+	widthSegments = Math.floor( widthSegments ) || 1;
+	heightSegments = Math.floor( heightSegments ) || 1;
+	depthSegments = Math.floor( depthSegments ) || 1;
 
-		widthSegments = Math.floor( widthSegments ) || 1;
-		heightSegments = Math.floor( heightSegments ) || 1;
-		depthSegments = Math.floor( depthSegments ) || 1;
+	// buffers
 
-		// buffers
+	var indices = [];
+	var vertices = [];
+	var normals = [];
+	var uvs = [];
 
-		var indices = [];
-		var vertices = [];
-		var normals = [];
-		var uvs = [];
+	// helper variables
 
-		// helper variables
+	var numberOfVertices = 0;
+	var groupStart = 0;
 
-		var numberOfVertices = 0;
-		var groupStart = 0;
+	// build each side of the box geometry
 
-		// build each side of the box geometry
+	buildPlane( 'z', 'y', 'x', - 1, - 1, depth, height, width, depthSegments, heightSegments, 0 ); // px
+	buildPlane( 'z', 'y', 'x', 1, - 1, depth, height, - width, depthSegments, heightSegments, 1 ); // nx
+	buildPlane( 'x', 'z', 'y', 1, 1, width, depth, height, widthSegments, depthSegments, 2 ); // py
+	buildPlane( 'x', 'z', 'y', 1, - 1, width, depth, - height, widthSegments, depthSegments, 3 ); // ny
+	buildPlane( 'x', 'y', 'z', 1, - 1, width, height, depth, widthSegments, heightSegments, 4 ); // pz
+	buildPlane( 'x', 'y', 'z', - 1, - 1, width, height, - depth, widthSegments, heightSegments, 5 ); // nz
 
-		buildPlane( 'z', 'y', 'x', - 1, - 1, depth, height, width, depthSegments, heightSegments, 0 ); // px
-		buildPlane( 'z', 'y', 'x', 1, - 1, depth, height, - width, depthSegments, heightSegments, 1 ); // nx
-		buildPlane( 'x', 'z', 'y', 1, 1, width, depth, height, widthSegments, depthSegments, 2 ); // py
-		buildPlane( 'x', 'z', 'y', 1, - 1, width, depth, - height, widthSegments, depthSegments, 3 ); // ny
-		buildPlane( 'x', 'y', 'z', 1, - 1, width, height, depth, widthSegments, heightSegments, 4 ); // pz
-		buildPlane( 'x', 'y', 'z', - 1, - 1, width, height, - depth, widthSegments, heightSegments, 5 ); // nz
+	// build geometry
 
-		// build geometry
+	this.setIndex( indices );
+	this.addAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
+	this.addAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
+	this.addAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
 
-		this.setIndex( indices );
-		this.addAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		this.addAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
-		this.addAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
+	function buildPlane( u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex ) {
 
-		function buildPlane( u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex ) {
+		var segmentWidth = width / gridX;
+		var segmentHeight = height / gridY;
 
-			var segmentWidth = width / gridX;
-			var segmentHeight = height / gridY;
+		var widthHalf = width / 2;
+		var heightHalf = height / 2;
+		var depthHalf = depth / 2;
 
-			var widthHalf = width / 2;
-			var heightHalf = height / 2;
-			var depthHalf = depth / 2;
+		var gridX1 = gridX + 1;
+		var gridY1 = gridY + 1;
 
-			var gridX1 = gridX + 1;
-			var gridY1 = gridY + 1;
+		var vertexCounter = 0;
+		var groupCount = 0;
 
-			var vertexCounter = 0;
-			var groupCount = 0;
+		var ix, iy;
 
-			var ix, iy;
+		var vector = new Vector3();
 
-			var vector = new Vector3();
+		// generate vertices, normals and uvs
 
-			// generate vertices, normals and uvs
+		for ( iy = 0; iy < gridY1; iy ++ ) {
 
-			for ( iy = 0; iy < gridY1; iy ++ ) {
+			var y = iy * segmentHeight - heightHalf;
 
-				var y = iy * segmentHeight - heightHalf;
+			for ( ix = 0; ix < gridX1; ix ++ ) {
 
-				for ( ix = 0; ix < gridX1; ix ++ ) {
+				var x = ix * segmentWidth - widthHalf;
 
-					var x = ix * segmentWidth - widthHalf;
+				// set values to correct vector component
 
-					// set values to correct vector component
+				vector[ u ] = x * udir;
+				vector[ v ] = y * vdir;
+				vector[ w ] = depthHalf;
 
-					vector[ u ] = x * udir;
-					vector[ v ] = y * vdir;
-					vector[ w ] = depthHalf;
+				// now apply vector to vertex buffer
 
-					// now apply vector to vertex buffer
+				vertices.push( vector.x, vector.y, vector.z );
 
-					vertices.push( vector.x, vector.y, vector.z );
+				// set values to correct vector component
 
-					// set values to correct vector component
+				vector[ u ] = 0;
+				vector[ v ] = 0;
+				vector[ w ] = depth > 0 ? 1 : - 1;
 
-					vector[ u ] = 0;
-					vector[ v ] = 0;
-					vector[ w ] = depth > 0 ? 1 : - 1;
+				// now apply vector to normal buffer
 
-					// now apply vector to normal buffer
+				normals.push( vector.x, vector.y, vector.z );
 
-					normals.push( vector.x, vector.y, vector.z );
+				// uvs
 
-					// uvs
+				uvs.push( ix / gridX );
+				uvs.push( 1 - ( iy / gridY ) );
 
-					uvs.push( ix / gridX );
-					uvs.push( 1 - ( iy / gridY ) );
+				// counters
 
-					// counters
-
-					vertexCounter += 1;
-
-				}
+				vertexCounter += 1;
 
 			}
-
-			// indices
-
-			// 1. you need three indices to draw a single face
-			// 2. a single segment consists of two faces
-			// 3. so we need to generate six (2*3) indices per segment
-
-			for ( iy = 0; iy < gridY; iy ++ ) {
-
-				for ( ix = 0; ix < gridX; ix ++ ) {
-
-					var a = numberOfVertices + ix + gridX1 * iy;
-					var b = numberOfVertices + ix + gridX1 * ( iy + 1 );
-					var c = numberOfVertices + ( ix + 1 ) + gridX1 * ( iy + 1 );
-					var d = numberOfVertices + ( ix + 1 ) + gridX1 * iy;
-
-					// faces
-
-					indices.push( a, b, d );
-					indices.push( b, c, d );
-
-					// increase counter
-
-					groupCount += 6;
-
-				}
-
-			}
-
-			// add a group to the geometry. this will ensure multi material support
-
-			scope.addGroup( groupStart, groupCount, materialIndex );
-
-			// calculate new start value for groups
-
-			groupStart += groupCount;
-
-			// update total number of vertices
-
-			numberOfVertices += vertexCounter;
 
 		}
+
+		// indices
+
+		// 1. you need three indices to draw a single face
+		// 2. a single segment consists of two faces
+		// 3. so we need to generate six (2*3) indices per segment
+
+		for ( iy = 0; iy < gridY; iy ++ ) {
+
+			for ( ix = 0; ix < gridX; ix ++ ) {
+
+				var a = numberOfVertices + ix + gridX1 * iy;
+				var b = numberOfVertices + ix + gridX1 * ( iy + 1 );
+				var c = numberOfVertices + ( ix + 1 ) + gridX1 * ( iy + 1 );
+				var d = numberOfVertices + ( ix + 1 ) + gridX1 * iy;
+
+				// faces
+
+				indices.push( a, b, d );
+				indices.push( b, c, d );
+
+				// increase counter
+
+				groupCount += 6;
+
+			}
+
+		}
+
+		// add a group to the geometry. this will ensure multi material support
+
+		scope.addGroup( groupStart, groupCount, materialIndex );
+
+		// calculate new start value for groups
+
+		groupStart += groupCount;
+
+		// update total number of vertices
+
+		numberOfVertices += vertexCounter;
 
 	}
 
 }
+
+BoxBufferGeometry.prototype = Object.create( BufferGeometry.prototype );
+BoxBufferGeometry.prototype.constructor = BoxBufferGeometry;
 
 /**
  * Uniform Utilities
@@ -13580,9 +13776,7 @@ DataTexture.prototype.isDataTexture = true;
  * @author bhouston / http://clara.io
  */
 
-var _vector1 = new Vector3();
-var _vector2 = new Vector3();
-var _normalMatrix = new Matrix3();
+var _vector1, _vector2, _normalMatrix;
 
 function Plane( normal, constant ) {
 
@@ -13625,6 +13819,13 @@ Object.assign( Plane.prototype, {
 	},
 
 	setFromCoplanarPoints: function ( a, b, c ) {
+
+		if ( _vector1 === undefined ) {
+
+			_vector1 = new Vector3();
+			_vector2 = new Vector3();
+
+		}
 
 		var normal = _vector1.subVectors( c, b ).cross( _vector2.subVectors( a, b ) ).normalize();
 
@@ -13698,6 +13899,8 @@ Object.assign( Plane.prototype, {
 	},
 
 	intersectLine: function ( line, target ) {
+
+		if ( _vector1 === undefined ) _vector1 = new Vector3();
 
 		if ( target === undefined ) {
 
@@ -13774,6 +13977,13 @@ Object.assign( Plane.prototype, {
 
 	applyMatrix4: function ( matrix, optionalNormalMatrix ) {
 
+		if ( _normalMatrix === undefined ) {
+
+			_normalMatrix = new Matrix3();
+			_vector1 = new Vector3();
+
+		}
+
 		var normalMatrix = optionalNormalMatrix || _normalMatrix.getNormalMatrix( matrix );
 
 		var referencePoint = this.coplanarPoint( _vector1 ).applyMatrix4( matrix );
@@ -13808,8 +14018,8 @@ Object.assign( Plane.prototype, {
  * @author bhouston / http://clara.io
  */
 
-var _sphere$1 = new Sphere();
-var _vector$5 = new Vector3();
+var _sphere$1;
+var _vector$5;
 
 function Frustum( p0, p1, p2, p3, p4, p5 ) {
 
@@ -13885,6 +14095,8 @@ Object.assign( Frustum.prototype, {
 
 	intersectsObject: function ( object ) {
 
+		if ( _sphere$1 === undefined ) _sphere$1 = new Sphere();
+
 		var geometry = object.geometry;
 
 		if ( geometry.boundingSphere === null ) geometry.computeBoundingSphere();
@@ -13896,6 +14108,8 @@ Object.assign( Frustum.prototype, {
 	},
 
 	intersectsSprite: function ( sprite ) {
+
+		if ( _sphere$1 === undefined ) _sphere$1 = new Sphere();
 
 		_sphere$1.center.set( 0, 0, 0 );
 		_sphere$1.radius = 0.7071067811865476;
@@ -13928,6 +14142,8 @@ Object.assign( Frustum.prototype, {
 	},
 
 	intersectsBox: function ( box ) {
+
+		if ( _vector$5 === undefined ) _vector$5 = new Vector3();
 
 		var planes = this.planes;
 
@@ -14037,7 +14253,7 @@ var fog_vertex = "#ifdef USE_FOG\n\tfogDepth = -mvPosition.z;\n#endif";
 
 var fog_pars_vertex = "#ifdef USE_FOG\n\tvarying float fogDepth;\n#endif";
 
-var fog_fragment = "#ifdef USE_FOG\n\t#ifdef FOG_EXP2\n\t\tfloat fogFactor = 1.0 - exp( - fogDensity * fogDensity * fogDepth * fogDepth );\n\t#else\n\t\tfloat fogFactor = smoothstep( fogNear, fogFar, fogDepth );\n\t#endif\n\tgl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );\n#endif";
+var fog_fragment = "#ifdef USE_FOG\n\t#ifdef FOG_EXP2\n\t\tfloat fogFactor = whiteCompliment( exp2( - fogDensity * fogDensity * fogDepth * fogDepth * LOG2 ) );\n\t#else\n\t\tfloat fogFactor = smoothstep( fogNear, fogFar, fogDepth );\n\t#endif\n\tgl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );\n#endif";
 
 var fog_pars_fragment = "#ifdef USE_FOG\n\tuniform vec3 fogColor;\n\tvarying float fogDepth;\n\t#ifdef FOG_EXP2\n\t\tuniform float fogDensity;\n\t#else\n\t\tuniform float fogNear;\n\t\tuniform float fogFar;\n\t#endif\n#endif";
 
@@ -15758,13 +15974,13 @@ function WebGLExtensions( gl ) {
 
 function WebGLGeometries( gl, attributes, info ) {
 
-	var geometries = new WeakMap();
-	var wireframeAttributes = new WeakMap();
+	var geometries = {};
+	var wireframeAttributes = {};
 
 	function onGeometryDispose( event ) {
 
 		var geometry = event.target;
-		var buffergeometry = geometries.get( geometry );
+		var buffergeometry = geometries[ geometry.id ];
 
 		if ( buffergeometry.index !== null ) {
 
@@ -15780,14 +15996,14 @@ function WebGLGeometries( gl, attributes, info ) {
 
 		geometry.removeEventListener( 'dispose', onGeometryDispose );
 
-		geometries.delete( geometry );
+		delete geometries[ geometry.id ];
 
-		var attribute = wireframeAttributes.get( buffergeometry );
+		var attribute = wireframeAttributes[ buffergeometry.id ];
 
 		if ( attribute ) {
 
 			attributes.remove( attribute );
-			wireframeAttributes.delete( buffergeometry );
+			delete wireframeAttributes[ buffergeometry.id ];
 
 		}
 
@@ -15799,7 +16015,7 @@ function WebGLGeometries( gl, attributes, info ) {
 
 	function get( object, geometry ) {
 
-		var buffergeometry = geometries.get( geometry );
+		var buffergeometry = geometries[ geometry.id ];
 
 		if ( buffergeometry ) return buffergeometry;
 
@@ -15821,7 +16037,7 @@ function WebGLGeometries( gl, attributes, info ) {
 
 		}
 
-		geometries.set( geometry, buffergeometry );
+		geometries[ geometry.id ] = buffergeometry;
 
 		info.memory.geometries ++;
 
@@ -15911,19 +16127,19 @@ function WebGLGeometries( gl, attributes, info ) {
 
 		//
 
-		var previousAttribute = wireframeAttributes.get( geometry );
+		var previousAttribute = wireframeAttributes[ geometry.id ];
 
 		if ( previousAttribute ) attributes.remove( previousAttribute );
 
 		//
 
-		wireframeAttributes.set( geometry, attribute );
+		wireframeAttributes[ geometry.id ] = attribute;
 
 	}
 
 	function getWireframeAttribute( geometry ) {
 
-		var currentAttribute = wireframeAttributes.get( geometry );
+		var currentAttribute = wireframeAttributes[ geometry.id ];
 
 		if ( currentAttribute ) {
 
@@ -15947,7 +16163,7 @@ function WebGLGeometries( gl, attributes, info ) {
 
 		}
 
-		return wireframeAttributes.get( geometry );
+		return wireframeAttributes[ geometry.id ];
 
 	}
 
@@ -17596,7 +17812,7 @@ function WebGLProgram( renderer, extensions, code, material, shader, parameters,
 
 			'#define MAX_BONES ' + parameters.maxBones,
 			( parameters.useFog && parameters.fog ) ? '#define USE_FOG' : '',
-			( parameters.useFog && parameters.fogExp2 ) ? '#define FOG_EXP2' : '',
+			( parameters.useFog && parameters.fogExp ) ? '#define FOG_EXP2' : '',
 
 			parameters.map ? '#define USE_MAP' : '',
 			parameters.envMap ? '#define USE_ENVMAP' : '',
@@ -17711,7 +17927,7 @@ function WebGLProgram( renderer, extensions, code, material, shader, parameters,
 			'#define GAMMA_FACTOR ' + gammaFactorDefine,
 
 			( parameters.useFog && parameters.fog ) ? '#define USE_FOG' : '',
-			( parameters.useFog && parameters.fogExp2 ) ? '#define FOG_EXP2' : '',
+			( parameters.useFog && parameters.fogExp ) ? '#define FOG_EXP2' : '',
 
 			parameters.map ? '#define USE_MAP' : '',
 			parameters.matcap ? '#define USE_MATCAP' : '',
@@ -18009,7 +18225,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 		"precision", "supportsVertexTextures", "map", "mapEncoding", "matcap", "matcapEncoding", "envMap", "envMapMode", "envMapEncoding",
 		"lightMap", "aoMap", "emissiveMap", "emissiveMapEncoding", "bumpMap", "normalMap", "objectSpaceNormalMap", "clearCoatNormalMap", "displacementMap", "specularMap",
 		"roughnessMap", "metalnessMap", "gradientMap",
-		"alphaMap", "combine", "vertexColors", "vertexTangents", "fog", "useFog", "fogExp2",
+		"alphaMap", "combine", "vertexColors", "vertexTangents", "fog", "useFog", "fogExp",
 		"flatShading", "sizeAttenuation", "logarithmicDepthBuffer", "skinning",
 		"maxBones", "useVertexTexture", "morphTargets", "morphNormals",
 		"maxMorphTargets", "maxMorphNormals", "premultipliedAlpha",
@@ -18148,7 +18364,7 @@ function WebGLPrograms( renderer, extensions, capabilities ) {
 
 			fog: !! fog,
 			useFog: material.fog,
-			fogExp2: ( fog && fog.isFogExp2 ),
+			fogExp: ( fog && fog.isFogExp2 ),
 
 			flatShading: material.flatShading,
 
@@ -18497,7 +18713,7 @@ function WebGLRenderList() {
 
 function WebGLRenderLists() {
 
-	var lists = new WeakMap();
+	var lists = {};
 
 	function onSceneDispose( event ) {
 
@@ -18505,29 +18721,29 @@ function WebGLRenderLists() {
 
 		scene.removeEventListener( 'dispose', onSceneDispose );
 
-		lists.delete( scene );
+		delete lists[ scene.id ];
 
 	}
 
 	function get( scene, camera ) {
 
-		var cameras = lists.get( scene );
+		var cameras = lists[ scene.id ];
 		var list;
 		if ( cameras === undefined ) {
 
 			list = new WebGLRenderList();
-			lists.set( scene, new WeakMap() );
-			lists.get( scene ).set( camera, list );
+			lists[ scene.id ] = {};
+			lists[ scene.id ][ camera.id ] = list;
 
 			scene.addEventListener( 'dispose', onSceneDispose );
 
 		} else {
 
-			list = cameras.get( camera );
+			list = cameras[ camera.id ];
 			if ( list === undefined ) {
 
 				list = new WebGLRenderList();
-				cameras.set( camera, list );
+				cameras[ camera.id ] = list;
 
 			}
 
@@ -18539,7 +18755,7 @@ function WebGLRenderLists() {
 
 	function dispose() {
 
-		lists = new WeakMap();
+		lists = {};
 
 	}
 
@@ -19008,7 +19224,7 @@ function WebGLRenderState() {
 
 function WebGLRenderStates() {
 
-	var renderStates = new WeakMap();
+	var renderStates = {};
 
 	function onSceneDispose( event ) {
 
@@ -19016,7 +19232,7 @@ function WebGLRenderStates() {
 
 		scene.removeEventListener( 'dispose', onSceneDispose );
 
-		renderStates.delete( scene );
+		delete renderStates[ scene.id ];
 
 	}
 
@@ -19024,24 +19240,24 @@ function WebGLRenderStates() {
 
 		var renderState;
 
-		if ( renderStates.has( scene ) === false ) {
+		if ( renderStates[ scene.id ] === undefined ) {
 
 			renderState = new WebGLRenderState();
-			renderStates.set( scene, new WeakMap() );
-			renderStates.get( scene ).set( camera, renderState );
+			renderStates[ scene.id ] = {};
+			renderStates[ scene.id ][ camera.id ] = renderState;
 
 			scene.addEventListener( 'dispose', onSceneDispose );
 
 		} else {
 
-			if ( renderStates.get( scene ).has( camera ) === false ) {
+			if ( renderStates[ scene.id ][ camera.id ] === undefined ) {
 
 				renderState = new WebGLRenderState();
-				renderStates.get( scene ).set( camera, renderState );
+				renderStates[ scene.id ][ camera.id ] = renderState;
 
 			} else {
 
-				renderState = renderStates.get( scene ).get( camera );
+				renderState = renderStates[ scene.id ][ camera.id ];
 
 			}
 
@@ -19053,7 +19269,7 @@ function WebGLRenderStates() {
 
 	function dispose() {
 
-		renderStates = new WeakMap();
+		renderStates = {};
 
 	}
 
@@ -20638,7 +20854,7 @@ function WebGLState( gl, extensions, utils, capabilities ) {
 
 function WebGLTextures( _gl, extensions, state, properties, capabilities, utils, info ) {
 
-	var _videoTextures = new WeakMap();
+	var _videoTextures = {};
 	var _canvas;
 
 	//
@@ -20820,7 +21036,7 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 
 		if ( texture.isVideoTexture ) {
 
-			_videoTextures.delete( texture );
+			delete _videoTextures[ texture.id ];
 
 		}
 
@@ -21729,13 +21945,14 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 
 	function updateVideoTexture( texture ) {
 
+		var id = texture.id;
 		var frame = info.render.frame;
 
 		// Check the last frame we updated the VideoTexture
 
-		if ( _videoTextures.get( texture ) !== frame ) {
+		if ( _videoTextures[ id ] !== frame ) {
 
-			_videoTextures.set( texture, frame );
+			_videoTextures[ id ] = frame;
 			texture.update();
 
 		}
@@ -25757,21 +25974,10 @@ SpriteMaterial.prototype.copy = function ( source ) {
 
 var _geometry;
 
-var _intersectPoint = new Vector3();
-var _worldScale = new Vector3();
-var _mvPosition = new Vector3();
-
-var _alignedPosition = new Vector2();
-var _rotatedPosition = new Vector2();
-var _viewWorldMatrix = new Matrix4();
-
-var _vA$1 = new Vector3();
-var _vB$1 = new Vector3();
-var _vC$1 = new Vector3();
-
-var _uvA$1 = new Vector2();
-var _uvB$1 = new Vector2();
-var _uvC$1 = new Vector2();
+var _intersectPoint, _worldScale, _mvPosition;
+var _alignedPosition, _rotatedPosition, _viewWorldMatrix;
+var _vA$1, _vB$1, _vC$1;
+var _uvA$1, _uvB$1, _uvC$1;
 
 function Sprite( material ) {
 
@@ -25813,20 +26019,34 @@ Sprite.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 	raycast: function ( raycaster, intersects ) {
 
-		if ( raycaster.camera === null ) {
+		if ( _uvC$1 === undefined ) {
 
-			console.error( 'THREE.Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.' );
+			_intersectPoint = new Vector3();
+			_worldScale = new Vector3();
+			_mvPosition = new Vector3();
+
+			_alignedPosition = new Vector2();
+			_rotatedPosition = new Vector2();
+			_viewWorldMatrix = new Matrix4();
+
+			_vA$1 = new Vector3();
+			_vB$1 = new Vector3();
+			_vC$1 = new Vector3();
+
+			_uvA$1 = new Vector2();
+			_uvB$1 = new Vector2();
+			_uvC$1 = new Vector2();
 
 		}
 
 		_worldScale.setFromMatrixScale( this.matrixWorld );
 
-		_viewWorldMatrix.copy( raycaster.camera.matrixWorld );
-		this.modelViewMatrix.multiplyMatrices( raycaster.camera.matrixWorldInverse, this.matrixWorld );
+		_viewWorldMatrix.copy( raycaster._camera.matrixWorld );
+		this.modelViewMatrix.multiplyMatrices( raycaster._camera.matrixWorldInverse, this.matrixWorld );
 
 		_mvPosition.setFromMatrixPosition( this.modelViewMatrix );
 
-		if ( raycaster.camera.isPerspectiveCamera && this.material.sizeAttenuation === false ) {
+		if ( raycaster._camera.isPerspectiveCamera && this.material.sizeAttenuation === false ) {
 
 			_worldScale.multiplyScalar( - _mvPosition.z );
 
@@ -25937,8 +26157,7 @@ function transformVertex( vertexPosition, mvPosition, center, scale, sin, cos ) 
  * @author mrdoob / http://mrdoob.com/
  */
 
-var _v1$4 = new Vector3();
-var _v2$2 = new Vector3();
+var _v1$4, _v2$2;
 
 function LOD() {
 
@@ -26027,6 +26246,8 @@ LOD.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 	raycast: function ( raycaster, intersects ) {
 
+		if ( _v1$4 === undefined ) _v1$4 = new Vector3();
+
 		_v1$4.setFromMatrixPosition( this.matrixWorld );
 
 		var distance = raycaster.ray.origin.distanceTo( _v1$4 );
@@ -26036,6 +26257,13 @@ LOD.prototype = Object.assign( Object.create( Object3D.prototype ), {
 	},
 
 	update: function ( camera ) {
+
+		if ( _v2$2 === undefined ) {
+
+			_v1$4 = new Vector3();
+			_v2$2 = new Vector3();
+
+		}
 
 		var levels = this.levels;
 
@@ -26219,8 +26447,7 @@ SkinnedMesh.prototype = Object.assign( Object.create( Mesh.prototype ), {
  * @author ikerr / http://verold.com
  */
 
-var _offsetMatrix = new Matrix4();
-var _identityMatrix = new Matrix4();
+var _offsetMatrix, _identityMatrix;
 
 function Skeleton( bones, boneInverses ) {
 
@@ -26329,6 +26556,13 @@ Object.assign( Skeleton.prototype, {
 	},
 
 	update: function () {
+
+		if ( _identityMatrix === undefined ) {
+
+			_offsetMatrix = new Matrix4();
+			_identityMatrix = new Matrix4();
+
+		}
 
 		var bones = this.bones;
 		var boneInverses = this.boneInverses;
@@ -26459,11 +26693,8 @@ LineBasicMaterial.prototype.copy = function ( source ) {
  * @author mrdoob / http://mrdoob.com/
  */
 
-var _start = new Vector3();
-var _end = new Vector3();
-var _inverseMatrix$1 = new Matrix4();
-var _ray$1 = new Ray();
-var _sphere$2 = new Sphere();
+var _start, _end;
+var _inverseMatrix$1, _ray$1, _sphere$2;
 
 function Line( geometry, material, mode ) {
 
@@ -26489,6 +26720,13 @@ Line.prototype = Object.assign( Object.create( Object3D.prototype ), {
 	isLine: true,
 
 	computeLineDistances: function () {
+
+		if ( _end === undefined ) {
+
+			_start = new Vector3();
+			_end = new Vector3();
+
+		}
 
 		var geometry = this.geometry;
 
@@ -26540,6 +26778,14 @@ Line.prototype = Object.assign( Object.create( Object3D.prototype ), {
 	},
 
 	raycast: function ( raycaster, intersects ) {
+
+		if ( _sphere$2 === undefined ) {
+
+			_inverseMatrix$1 = new Matrix4();
+			_ray$1 = new Ray();
+			_sphere$2 = new Sphere();
+
+		}
 
 		var precision = raycaster.linePrecision;
 
@@ -26695,8 +26941,7 @@ Line.prototype = Object.assign( Object.create( Object3D.prototype ), {
  * @author mrdoob / http://mrdoob.com/
  */
 
-var _start$1 = new Vector3();
-var _end$1 = new Vector3();
+var _start$1, _end$1;
 
 function LineSegments( geometry, material ) {
 
@@ -26713,6 +26958,13 @@ LineSegments.prototype = Object.assign( Object.create( Line.prototype ), {
 	isLineSegments: true,
 
 	computeLineDistances: function () {
+
+		if ( _end$1 === undefined ) {
+
+			_start$1 = new Vector3();
+			_end$1 = new Vector3();
+
+		}
 
 		var geometry = this.geometry;
 
@@ -26849,10 +27101,7 @@ PointsMaterial.prototype.copy = function ( source ) {
  * @author alteredq / http://alteredqualia.com/
  */
 
-var _inverseMatrix$2 = new Matrix4();
-var _ray$2 = new Ray();
-var _sphere$3 = new Sphere();
-var _position$1 = new Vector3();
+var _inverseMatrix$2, _ray$2, _sphere$3, _position$1;
 
 function Points( geometry, material ) {
 
@@ -26874,6 +27123,15 @@ Points.prototype = Object.assign( Object.create( Object3D.prototype ), {
 	isPoints: true,
 
 	raycast: function ( raycaster, intersects ) {
+
+		if ( _sphere$3 === undefined ) {
+
+			_inverseMatrix$2 = new Matrix4();
+			_ray$2 = new Ray();
+			_sphere$3 = new Sphere();
+			_position$1 = new Vector3();
+
+		}
 
 		var geometry = this.geometry;
 		var matrixWorld = this.matrixWorld;
@@ -39967,18 +40225,7 @@ Object.assign( FontLoader.prototype, {
  * @author alteredq / http://alteredqualia.com/
  */
 
-var _BlendingMode = {
-	NoBlending: NoBlending,
-	NormalBlending: NormalBlending,
-	AdditiveBlending: AdditiveBlending,
-	SubtractiveBlending: SubtractiveBlending,
-	MultiplyBlending: MultiplyBlending,
-	CustomBlending: CustomBlending
-};
-
-var _color = new Color();
-var _textureLoader = new TextureLoader();
-var _materialLoader = new MaterialLoader();
+var _BlendingMode, _color, _textureLoader, _materialLoader;
 
 function Loader() {}
 
@@ -40040,6 +40287,23 @@ Object.assign( Loader.prototype, {
 	},
 
 	createMaterial: function ( m, texturePath, crossOrigin ) {
+
+		if ( _materialLoader === undefined ) {
+
+			_BlendingMode = {
+				NoBlending: NoBlending,
+				NormalBlending: NormalBlending,
+				AdditiveBlending: AdditiveBlending,
+				SubtractiveBlending: SubtractiveBlending,
+				MultiplyBlending: MultiplyBlending,
+				CustomBlending: CustomBlending
+			};
+
+			_color = new Color();
+			_textureLoader = new TextureLoader();
+			_materialLoader = new MaterialLoader();
+
+		}
 
 		// convert from old material format
 
@@ -40719,8 +40983,7 @@ AmbientLightProbe.prototype = Object.assign( Object.create( LightProbe.prototype
 
 } );
 
-var _eyeRight = new Matrix4();
-var _eyeLeft = new Matrix4();
+var _eyeRight, _eyeLeft;
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -40757,6 +41020,13 @@ function StereoCamera() {
 Object.assign( StereoCamera.prototype, {
 
 	update: function ( camera ) {
+
+		if ( _eyeRight === undefined ) {
+
+			_eyeRight = new Matrix4();
+			_eyeLeft = new Matrix4();
+
+		}
 
 		var cache = this._cache;
 
@@ -40892,10 +41162,8 @@ Object.assign( Clock.prototype, {
  * @author mrdoob / http://mrdoob.com/
  */
 
-var _position$2 = new Vector3();
-var _quaternion$3 = new Quaternion();
-var _scale$1 = new Vector3();
-var _orientation = new Vector3();
+var _position$2, _quaternion$3, _scale$1;
+var _orientation;
 
 function AudioListener() {
 
@@ -40988,6 +41256,15 @@ AudioListener.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 		Object3D.prototype.updateMatrixWorld.call( this, force );
 
+		if ( _position$2 === undefined ) {
+
+			_position$2 = new Vector3();
+			_quaternion$3 = new Quaternion();
+			_scale$1 = new Vector3();
+			_orientation = new Vector3();
+
+		}
+
 		var listener = this.context.listener;
 		var up = this.up;
 
@@ -41048,7 +41325,6 @@ function Audio( listener ) {
 	this.loop = false;
 	this.startTime = 0;
 	this.offset = 0;
-	this.duration = undefined;
 	this.playbackRate = 1;
 	this.isPlaying = false;
 	this.hasPlaybackControl = true;
@@ -41123,7 +41399,7 @@ Audio.prototype = Object.assign( Object.create( Object3D.prototype ), {
 		source.loop = this.loop;
 		source.onended = this.onEnded.bind( this );
 		this.startTime = this.context.currentTime;
-		source.start( this.startTime, this.offset, this.duration );
+		source.start( this.startTime, this.offset );
 
 		this.isPlaying = true;
 
@@ -41371,10 +41647,8 @@ Audio.prototype = Object.assign( Object.create( Object3D.prototype ), {
  * @author mrdoob / http://mrdoob.com/
  */
 
-var _position$3 = new Vector3();
-var _quaternion$4 = new Quaternion();
-var _scale$2 = new Vector3();
-var _orientation$1 = new Vector3();
+var _position$3, _quaternion$4, _scale$2;
+var _orientation$1;
 
 function PositionalAudio( listener ) {
 
@@ -41465,6 +41739,15 @@ PositionalAudio.prototype = Object.assign( Object.create( Audio.prototype ), {
 	updateMatrixWorld: function ( force ) {
 
 		Object3D.prototype.updateMatrixWorld.call( this, force );
+
+		if ( _position$3 === undefined ) {
+
+			_position$3 = new Vector3();
+			_quaternion$4 = new Quaternion();
+			_scale$2 = new Vector3();
+			_orientation$1 = new Vector3();
+
+		}
 
 		if ( this.hasPlaybackControl === true && this.isPlaying === false ) return;
 
@@ -41756,39 +42039,9 @@ Object.assign( PropertyMixer.prototype, {
 
 // Characters [].:/ are reserved for track binding syntax.
 var _RESERVED_CHARS_RE = '\\[\\]\\.:\\/';
-var _reservedRe = new RegExp( '[' + _RESERVED_CHARS_RE + ']', 'g' );
 
-// Attempts to allow node names from any language. ES5's `\w` regexp matches
-// only latin characters, and the unicode \p{L} is not yet supported. So
-// instead, we exclude reserved characters and match everything else.
-var _wordChar = '[^' + _RESERVED_CHARS_RE + ']';
-var _wordCharOrDot = '[^' + _RESERVED_CHARS_RE.replace( '\\.', '' ) + ']';
-
-// Parent directories, delimited by '/' or ':'. Currently unused, but must
-// be matched to parse the rest of the track name.
-var _directoryRe = /((?:WC+[\/:])*)/.source.replace( 'WC', _wordChar );
-
-// Target node. May contain word characters (a-zA-Z0-9_) and '.' or '-'.
-var _nodeRe = /(WCOD+)?/.source.replace( 'WCOD', _wordCharOrDot );
-
-// Object on target node, and accessor. May not contain reserved
-// characters. Accessor may contain any character except closing bracket.
-var _objectRe = /(?:\.(WC+)(?:\[(.+)\])?)?/.source.replace( 'WC', _wordChar );
-
-// Property and accessor. May not contain reserved characters. Accessor may
-// contain any non-bracket characters.
-var _propertyRe = /\.(WC+)(?:\[(.+)\])?/.source.replace( 'WC', _wordChar );
-
-var _trackRe = new RegExp( ''
-	+ '^'
-	+ _directoryRe
-	+ _nodeRe
-	+ _objectRe
-	+ _propertyRe
-	+ '$'
-);
-
-var _supportedObjectNames = [ 'material', 'materials', 'bones' ];
+var _reservedRe;
+var _trackRe, _supportedObjectNames;
 
 function Composite( targetGroup, path, optionalParsedPath ) {
 
@@ -41890,11 +42143,53 @@ Object.assign( PropertyBinding, {
 	 */
 	sanitizeNodeName: function ( name ) {
 
+		if ( _reservedRe === undefined ) {
+
+			_reservedRe = new RegExp( '[' + _RESERVED_CHARS_RE + ']', 'g' );
+
+		}
+
 		return name.replace( /\s/g, '_' ).replace( _reservedRe, '' );
 
 	},
 
 	parseTrackName: function ( trackName ) {
+
+		if ( _supportedObjectNames === undefined ) {
+
+			// Attempts to allow node names from any language. ES5's `\w` regexp matches
+			// only latin characters, and the unicode \p{L} is not yet supported. So
+			// instead, we exclude reserved characters and match everything else.
+			var wordChar = '[^' + _RESERVED_CHARS_RE + ']';
+			var wordCharOrDot = '[^' + _RESERVED_CHARS_RE.replace( '\\.', '' ) + ']';
+
+			// Parent directories, delimited by '/' or ':'. Currently unused, but must
+			// be matched to parse the rest of the track name.
+			var directoryRe = /((?:WC+[\/:])*)/.source.replace( 'WC', wordChar );
+
+			// Target node. May contain word characters (a-zA-Z0-9_) and '.' or '-'.
+			var nodeRe = /(WCOD+)?/.source.replace( 'WCOD', wordCharOrDot );
+
+			// Object on target node, and accessor. May not contain reserved
+			// characters. Accessor may contain any character except closing bracket.
+			var objectRe = /(?:\.(WC+)(?:\[(.+)\])?)?/.source.replace( 'WC', wordChar );
+
+			// Property and accessor. May not contain reserved characters. Accessor may
+			// contain any non-bracket characters.
+			var propertyRe = /\.(WC+)(?:\[(.+)\])?/.source.replace( 'WC', wordChar );
+
+			_trackRe = new RegExp( ''
+				+ '^'
+				+ directoryRe
+				+ nodeRe
+				+ objectRe
+				+ propertyRe
+				+ '$'
+			);
+
+			_supportedObjectNames = [ 'material', 'materials', 'bones' ];
+
+		}
 
 		var matches = _trackRe.exec( trackName );
 
@@ -44333,7 +44628,6 @@ function Raycaster( origin, direction, near, far ) {
 
 	this.near = near || 0;
 	this.far = far || Infinity;
-	this.camera = null;
 
 	this.params = {
 		Mesh: {},
@@ -44400,13 +44694,13 @@ Object.assign( Raycaster.prototype, {
 
 			this.ray.origin.setFromMatrixPosition( camera.matrixWorld );
 			this.ray.direction.set( coords.x, coords.y, 0.5 ).unproject( camera ).sub( this.ray.origin ).normalize();
-			this.camera = camera;
+			this._camera = camera;
 
 		} else if ( ( camera && camera.isOrthographicCamera ) ) {
 
 			this.ray.origin.set( coords.x, coords.y, ( camera.near + camera.far ) / ( camera.near - camera.far ) ).unproject( camera ); // set origin in plane of camera
 			this.ray.direction.set( 0, 0, - 1 ).transformDirection( camera.matrixWorld );
-			this.camera = camera;
+			this._camera = camera;
 
 		} else {
 
@@ -44606,7 +44900,7 @@ Object.assign( Cylindrical.prototype, {
  * @author bhouston / http://clara.io
  */
 
-var _vector$6 = new Vector2();
+var _vector$6;
 
 function Box2( min, max ) {
 
@@ -44641,6 +44935,8 @@ Object.assign( Box2.prototype, {
 	},
 
 	setFromCenterAndSize: function ( center, size ) {
+
+		if ( _vector$6 === undefined ) _vector$6 = new Vector2();
 
 		var halfSize = _vector$6.copy( size ).multiplyScalar( 0.5 );
 		this.min.copy( center ).sub( halfSize );
@@ -44792,6 +45088,8 @@ Object.assign( Box2.prototype, {
 
 	distanceToPoint: function ( point ) {
 
+		if ( _vector$6 === undefined ) _vector$6 = new Vector2();
+
 		var clampedPoint = _vector$6.copy( point ).clamp( this.min, this.max );
 		return clampedPoint.sub( point ).length();
 
@@ -44836,8 +45134,7 @@ Object.assign( Box2.prototype, {
  * @author bhouston / http://clara.io
  */
 
-var _startP = new Vector3();
-var _startEnd = new Vector3();
+var _startP, _startEnd;
 
 function Line3( start, end ) {
 
@@ -44925,6 +45222,13 @@ Object.assign( Line3.prototype, {
 
 	closestPointToPointParameter: function ( point, clampToLine ) {
 
+		if ( _startP === undefined ) {
+
+			_startP = new Vector3();
+			_startEnd = new Vector3();
+
+		}
+
 		_startP.subVectors( point, this.start );
 		_startEnd.subVectors( this.end, this.start );
 
@@ -44998,10 +45302,7 @@ ImmediateRenderObject.prototype.isImmediateRenderObject = true;
  * @author WestLangley / http://github.com/WestLangley
  */
 
-var _v1$5 = new Vector3();
-var _v2$3 = new Vector3();
-var _normalMatrix$1 = new Matrix3();
-var _keys = [ 'a', 'b', 'c' ];
+var _v1$5, _v2$3, _normalMatrix$1, _keys;
 
 function VertexNormalsHelper( object, size, hex, linewidth ) {
 
@@ -45051,6 +45352,15 @@ VertexNormalsHelper.prototype = Object.create( LineSegments.prototype );
 VertexNormalsHelper.prototype.constructor = VertexNormalsHelper;
 
 VertexNormalsHelper.prototype.update = function () {
+
+	if ( _normalMatrix$1 === undefined ) {
+
+		_v1$5 = new Vector3();
+		_v2$3 = new Vector3();
+		_normalMatrix$1 = new Matrix3();
+		_keys = [ 'a', 'b', 'c' ];
+
+	}
 
 	this.object.updateMatrixWorld( true );
 
@@ -45138,7 +45448,7 @@ VertexNormalsHelper.prototype.update = function () {
  * @author WestLangley / http://github.com/WestLangley
  */
 
-var _vector$7 = new Vector3();
+var _vector$7;
 
 function SpotLightHelper( light, color ) {
 
@@ -45197,6 +45507,8 @@ SpotLightHelper.prototype.dispose = function () {
 
 SpotLightHelper.prototype.update = function () {
 
+	if ( _vector$7 === undefined ) _vector$7 = new Vector3();
+
 	this.light.updateMatrixWorld();
 
 	var coneLength = this.light.distance ? this.light.distance : 1000;
@@ -45228,9 +45540,7 @@ SpotLightHelper.prototype.update = function () {
  * @author Mugen87 / https://github.com/Mugen87
  */
 
-var _vector$8 = new Vector3();
-var _boneMatrix = new Matrix4();
-var _matrixWorldInv = new Matrix4();
+var _vector$8, _boneMatrix, _matrixWorldInv;
 
 function getBoneList( object ) {
 
@@ -45298,6 +45608,14 @@ SkeletonHelper.prototype = Object.create( LineSegments.prototype );
 SkeletonHelper.prototype.constructor = SkeletonHelper;
 
 SkeletonHelper.prototype.updateMatrixWorld = function ( force ) {
+
+	if ( _matrixWorldInv === undefined ) {
+
+		_vector$8 = new Vector3();
+		_boneMatrix = new Matrix4();
+		_matrixWorldInv = new Matrix4();
+
+	}
 
 	var bones = this.bones;
 
@@ -45500,9 +45818,7 @@ RectAreaLightHelper.prototype.dispose = function () {
  * @author Mugen87 / https://github.com/Mugen87
  */
 
-var _vector$9 = new Vector3();
-var _color1 = new Color();
-var _color2 = new Color();
+var _vector$9, _color1, _color2;
 
 function HemisphereLightHelper( light, size, color ) {
 
@@ -45544,6 +45860,14 @@ HemisphereLightHelper.prototype.dispose = function () {
 };
 
 HemisphereLightHelper.prototype.update = function () {
+
+	if ( _color2 === undefined ) {
+
+		_vector$9 = new Vector3();
+		_color1 = new Color();
+		_color2 = new Color();
+
+	}
 
 	var mesh = this.children[ 0 ];
 
@@ -45976,9 +46300,7 @@ PositionalAudioHelper.prototype.dispose = function () {
  * @author WestLangley / http://github.com/WestLangley
  */
 
-var _v1$6 = new Vector3();
-var _v2$4 = new Vector3();
-var _normalMatrix$2 = new Matrix3();
+var _v1$6, _v2$4, _normalMatrix$2;
 
 function FaceNormalsHelper( object, size, hex, linewidth ) {
 
@@ -46029,6 +46351,14 @@ FaceNormalsHelper.prototype = Object.create( LineSegments.prototype );
 FaceNormalsHelper.prototype.constructor = FaceNormalsHelper;
 
 FaceNormalsHelper.prototype.update = function () {
+
+	if ( _normalMatrix$2 === undefined ) {
+
+		_v1$6 = new Vector3();
+		_v2$4 = new Vector3();
+		_normalMatrix$2 = new Matrix3();
+
+	}
 
 	this.object.updateMatrixWorld( true );
 
@@ -46082,9 +46412,7 @@ FaceNormalsHelper.prototype.update = function () {
  * @author WestLangley / http://github.com/WestLangley
  */
 
-var _v1$7 = new Vector3();
-var _v2$5 = new Vector3();
-var _v3$1 = new Vector3();
+var _v1$7, _v2$5, _v3$1;
 
 function DirectionalLightHelper( light, size, color ) {
 
@@ -46138,6 +46466,14 @@ DirectionalLightHelper.prototype.dispose = function () {
 
 DirectionalLightHelper.prototype.update = function () {
 
+	if ( _v3$1 === undefined ) {
+
+		_v1$7 = new Vector3();
+		_v2$5 = new Vector3();
+		_v3$1 = new Vector3();
+
+	}
+
 	_v1$7.setFromMatrixPosition( this.light.matrixWorld );
 	_v2$5.setFromMatrixPosition( this.light.target.matrixWorld );
 	_v3$1.subVectors( _v2$5, _v1$7 );
@@ -46171,8 +46507,7 @@ DirectionalLightHelper.prototype.update = function () {
  *		http://evanw.github.com/lightgl.js/tests/shadowmap.html
  */
 
-var _vector$a = new Vector3();
-var _camera = new Camera();
+var _vector$a, _camera;
 
 function CameraHelper( camera ) {
 
@@ -46283,6 +46618,8 @@ CameraHelper.prototype.constructor = CameraHelper;
 
 CameraHelper.prototype.update = function () {
 
+	if ( _camera === undefined ) _camera = new Camera();
+
 	var geometry = this.geometry;
 	var pointMap = this.pointMap;
 
@@ -46336,6 +46673,8 @@ CameraHelper.prototype.update = function () {
 
 function setPoint( point, pointMap, geometry, camera, x, y, z ) {
 
+	if ( _vector$a === undefined ) _vector$a = new Vector3();
+
 	_vector$a.set( x, y, z ).unproject( camera );
 
 	var points = pointMap[ point ];
@@ -46359,7 +46698,7 @@ function setPoint( point, pointMap, geometry, camera, x, y, z ) {
  * @author Mugen87 / http://github.com/Mugen87
  */
 
-var _box$2 = new Box3();
+var _box$2;
 
 function BoxHelper( object, color ) {
 
@@ -46386,6 +46725,8 @@ BoxHelper.prototype = Object.create( LineSegments.prototype );
 BoxHelper.prototype.constructor = BoxHelper;
 
 BoxHelper.prototype.update = function ( object ) {
+
+	if ( _box$2 === undefined ) _box$2 = new Box3();
 
 	if ( object !== undefined ) {
 
@@ -46580,7 +46921,7 @@ PlaneHelper.prototype.updateMatrixWorld = function ( force ) {
  *  headWidth - Number
  */
 
-var _axis = new Vector3();
+var _axis;
 var _lineGeometry, _coneGeometry;
 
 function ArrowHelper( dir, origin, length, color, headLength, headWidth ) {
@@ -46625,6 +46966,8 @@ ArrowHelper.prototype = Object.create( Object3D.prototype );
 ArrowHelper.prototype.constructor = ArrowHelper;
 
 ArrowHelper.prototype.setDirection = function ( dir ) {
+
+	if ( _axis === undefined ) _axis = new Vector3();
 
 	// dir is assumed to be normalized
 
