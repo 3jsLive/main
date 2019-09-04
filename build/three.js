@@ -62,8 +62,6 @@
 		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
 		Object.assign = function ( target ) {
-			var arguments$1 = arguments;
-
 
 			if ( target === undefined || target === null ) {
 
@@ -75,7 +73,7 @@
 
 			for ( var index = 1; index < arguments.length; index ++ ) {
 
-				var source = arguments$1[ index ];
+				var source = arguments[ index ];
 
 				if ( source !== undefined && source !== null ) {
 
@@ -5454,14 +5452,12 @@
 		},
 
 		add: function ( object ) {
-			var arguments$1 = arguments;
-
 
 			if ( arguments.length > 1 ) {
 
 				for ( var i = 0; i < arguments.length; i ++ ) {
 
-					this.add( arguments$1[ i ] );
+					this.add( arguments[ i ] );
 
 				}
 
@@ -5500,14 +5496,12 @@
 		},
 
 		remove: function ( object ) {
-			var arguments$1 = arguments;
-
 
 			if ( arguments.length > 1 ) {
 
 				for ( var i = 0; i < arguments.length; i ++ ) {
 
-					this.remove( arguments$1[ i ] );
+					this.remove( arguments[ i ] );
 
 				}
 
@@ -42404,8 +42398,6 @@
 	 */
 
 	function AnimationObjectGroup() {
-		var arguments$1 = arguments;
-
 
 		this.uuid = _Math.generateUUID();
 
@@ -42420,7 +42412,7 @@
 
 		for ( var i = 0, n = arguments.length; i !== n; ++ i ) {
 
-			indices[ arguments$1[ i ].uuid ] = i;
+			indices[ arguments[ i ].uuid ] = i;
 
 		}
 
@@ -42460,8 +42452,6 @@
 		isAnimationObjectGroup: true,
 
 		add: function () {
-			var arguments$1 = arguments;
-
 
 			var objects = this._objects,
 				nObjects = objects.length,
@@ -42475,7 +42465,7 @@
 
 			for ( var i = 0, n = arguments.length; i !== n; ++ i ) {
 
-				var object = arguments$1[ i ],
+				var object = arguments[ i ],
 					uuid = object.uuid,
 					index = indicesByUUID[ uuid ];
 
@@ -42548,8 +42538,6 @@
 		},
 
 		remove: function () {
-			var arguments$1 = arguments;
-
 
 			var objects = this._objects,
 				nCachedObjects = this.nCachedObjects_,
@@ -42559,7 +42547,7 @@
 
 			for ( var i = 0, n = arguments.length; i !== n; ++ i ) {
 
-				var object = arguments$1[ i ],
+				var object = arguments[ i ],
 					uuid = object.uuid,
 					index = indicesByUUID[ uuid ];
 
@@ -42599,8 +42587,6 @@
 
 		// remove & forget
 		uncache: function () {
-			var arguments$1 = arguments;
-
 
 			var objects = this._objects,
 				nObjects = objects.length,
@@ -42611,7 +42597,7 @@
 
 			for ( var i = 0, n = arguments.length; i !== n; ++ i ) {
 
-				var object = arguments$1[ i ],
+				var object = arguments[ i ],
 					uuid = object.uuid,
 					index = indicesByUUID[ uuid ];
 
