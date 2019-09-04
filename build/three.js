@@ -20379,7 +20379,7 @@
 		// also OffscreenCanvas.getContext("webgl"), but not OffscreenCanvas.getContext("2d")!
 
 		var useOffscreenCanvas = typeof OffscreenCanvas !== 'undefined'
-			&& (new OffscreenCanvas(1, 1).getContext("2d")) !== null;
+			&& ( new OffscreenCanvas( 1, 1 ).getContext( "2d" ) ) !== null;
 
 		function createCanvas( width, height ) {
 
