@@ -123,6 +123,8 @@
 
 			}
 
+			return this;
+
 		},
 
 		hasEventListener: function ( type, listener ) {
@@ -154,6 +156,8 @@
 
 			}
 
+			return this;
+
 		},
 
 		dispatchEvent: function ( event ) {
@@ -176,6 +180,8 @@
 				}
 
 			}
+
+			return this;
 
 		}
 
@@ -9279,7 +9285,7 @@
 
 	}
 
-	Object.assign( DirectGeometry.prototype, {
+	DirectGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
 
 		computeGroups: function ( geometry ) {
 

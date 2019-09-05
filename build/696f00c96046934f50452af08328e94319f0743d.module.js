@@ -117,6 +117,8 @@ Object.assign( EventDispatcher.prototype, {
 
 		}
 
+		return this;
+
 	},
 
 	hasEventListener: function ( type, listener ) {
@@ -148,6 +150,8 @@ Object.assign( EventDispatcher.prototype, {
 
 		}
 
+		return this;
+
 	},
 
 	dispatchEvent: function ( event ) {
@@ -170,6 +174,8 @@ Object.assign( EventDispatcher.prototype, {
 			}
 
 		}
+
+		return this;
 
 	}
 
@@ -9273,7 +9279,7 @@ function DirectGeometry() {
 
 }
 
-Object.assign( DirectGeometry.prototype, {
+DirectGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
 
 	computeGroups: function ( geometry ) {
 
